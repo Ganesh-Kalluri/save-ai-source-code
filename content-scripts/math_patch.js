@@ -261,13 +261,14 @@ class saveaiMathXmlNode extends ix {
   }
 }
 
+
 // Inline math: returns a saveaiMathXmlNode
 function saveaiInlineMathNode(latex) {
   return new saveaiMathXmlNode(saveaiLatexToOfficeMathXML(latex, false));
 }
 
 // === Patch the Px function to handle LaTeX math ===
-const _saveai_orig_Px = Px;
+
 function Px(t, e) {
   // Fast path: no $ signs means no math
   if (!t || t.indexOf('$') === -1) return _saveai_orig_Px(t, e);
@@ -309,7 +310,14 @@ function Px(t, e) {
     } else {
       // Math segment
       try {
-        result.push(saveaiInlineMathNode(seg.content));
+        if (seg.type === 'display') {
+          // Display math: place on its own line by adding line breaks before and after
+          result.push(new xr({ text: "\n", break: 1 }));
+          result.push(saveaiInlineMathNode(seg.content));
+          result.push(new xr({ text: "\n", break: 1 }));
+        } else {
+          result.push(saveaiInlineMathNode(seg.content));
+        }
       } catch(err) {
         // Fallback: render as plain text
         const textRuns = _saveai_orig_Px('$' + seg.content + '$', e);
@@ -321,3 +329,4 @@ function Px(t, e) {
 }
 
 /* END SAVEAI LATEX MATH PATCH */
+

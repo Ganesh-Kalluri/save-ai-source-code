@@ -674,6 +674,7 @@ class saveaiMathXmlNode extends ix {
   }
 }
 
+
 // Inline math: returns a saveaiMathXmlNode
 function saveaiInlineMathNode(latex) {
   return new saveaiMathXmlNode(saveaiLatexToOfficeMathXML(latex, false));
@@ -722,7 +723,14 @@ function Px(t, e) {
     } else {
       // Math segment
       try {
-        result.push(saveaiInlineMathNode(seg.content));
+        if (seg.type === 'display') {
+          // Display math: place on its own line by adding line breaks before and after
+          result.push(new xr({ text: "\n", break: 1 }));
+          result.push(saveaiInlineMathNode(seg.content));
+          result.push(new xr({ text: "\n", break: 1 }));
+        } else {
+          result.push(saveaiInlineMathNode(seg.content));
+        }
       } catch(err) {
         // Fallback: render as plain text
         const textRuns = _saveai_orig_Px('$' + seg.content + '$', e);
@@ -735,7 +743,33 @@ function Px(t, e) {
 
 /* END SAVEAI LATEX MATH PATCH */
 
-function _saveai_orig_Px(t,e){const n=[];let r="",i=!1,o=!1,u=!1,l=!1,c=!1,f=-1,p=-1,m=-1,x=-1;const g=fc(e);function A(E){return new xr({text:E,bold:i,italics:o,strike:l,underline:u?{type:"single"}:void 0,color:"000000",size:e?.paragraphSize||24,font:g,rightToLeft:e?.direction==="RTL"})}function S(){r&&(n.push(A(r)),r="")}for(let E=0;E<t.length;E++){if(t[E]==="\\"&&E+1<t.length){const y=t[E+1];if(y==="*"||y==="`"||y==="\\"||y==="["||y==="]"||y==="+"||y==="~"){r+=y,E++;continue}r+=t[E];continue}if(!c&&t[E]==="["){let y=-1,T=-1,k=-1;for(let w=E+1;w<t.length;w++){if(t[w]==="\\"&&w+1<t.length){w++;continue}if(t[w]==="]"){y=w;break}}if(y>E&&y+1<t.length&&t[y+1]==="("){T=y+1;for(let w=T+1;w<t.length;w++)if(t[w]===")"){k=w;break}}if(y>E&&T>y&&k>T){S();const w=t.substring(E+1,y),D=t.substring(T+1,k);n.push(new zD({children:[new xr({text:w,color:"0000FF",underline:{type:"single"},bold:i,italics:o,strike:l,size:e?.paragraphSize||24,font:g,rightToLeft:e?.direction==="RTL"})],link:D})),E=k;continue}}if(t[E]==="`"&&!c){S(),c=!0;continue}if(t[E]==="`"&&c){r&&(n.push(aQ(r,e)),r=""),c=!1;continue}if(c){r+=t[E];continue}if(E+2<t.length&&t[E]==="*"&&t[E+1]==="*"&&t[E+2]==="*"){S(),!i&&!o?(f=E,p=E):(f=-1,p=-1),i=!i,o=!o,E+=2;continue}if(E+1<t.length&&t[E]==="*"&&t[E+1]==="*"){S(),i?f=-1:f=E,i=!i,E++;continue}if(E+1<t.length&&t[E]==="+"&&t[E+1]==="+"){if(!(u||Lx(t,"++",E+2))){r+="++",E++;continue}S(),u?m=-1:m=E,u=!u,E++;continue}if(E+1<t.length&&t[E]==="~"&&t[E+1]==="~"){if(!(l||Lx(t,"~~",E+2))){r+="~~",E++;continue}S(),l?x=-1:x=E,l=!l,E++;continue}if(t[E]==="*"&&(E===0||t[E-1]!=="*")&&(E===t.length-1||t[E+1]!=="*")){S(),o?p=-1:p=E,o=!o;continue}r+=t[E]}return r&&(i&&o&&f>=0&&p>=0&&f===p?(r="***"+r,i=!1,o=!1):(i&&f>=0&&(r="**"+r,i=!1),o&&p>=0&&(r="*"+r,o=!1),u&&m>=0&&(r="++"+r,u=!1),l&&x>=0&&(r="~~"+r,l=!1)),c&&(r="`"+r),r.trim()&&n.push(A(r))),n.length===0&&n.push(new xr({text:"",color:"000000",size:e?.paragraphSize||24,font:g})),n}function aQ(t,e){return new xr({text:t,font:"Courier New",size:e?.paragraphSize?e.paragraphSize-2:20,color:"444444",shading:{fill:"F5F5F5"},rightToLeft:e?.direction==="RTL"})}function oQ(t,e,n){const r=t.split(`
+
+function _saveai_orig_Px(t,e){const n=[];let r="",i=!1,o=!1,u=!1,l=!1,c=!1,f=-1,p=-1,m=-1,x=-1;const g=fc(e);function A(E){
+    const parts = E.split('\n');
+    const runs = [];
+    parts.forEach((part, idx) => {
+      if (part !== "") {
+        runs.push(new xr({
+          text: part,
+          bold: i,
+          italics: o,
+          strike: l,
+          underline: u ? {type:"single"} : void 0,
+          color: "000000",
+          size: e?.paragraphSize||24,
+          font: g,
+          rightToLeft: e?.direction==="RTL"
+        }));
+      }
+      if (idx < parts.length - 1) {
+        runs.push(new xr({
+          text: "\n",
+          break: 1
+        }));
+      }
+    });
+    return runs;
+  }function S(){r&&(n.push(...A(r)),r="")}for(let E=0;E<t.length;E++){if(t[E]==="\\"&&E+1<t.length){const y=t[E+1];if(y==="*"||y==="`"||y==="\\"||y==="["||y==="]"||y==="+"||y==="~"){r+=y,E++;continue}r+=t[E];continue}if(!c&&t[E]==="["){let y=-1,T=-1,k=-1;for(let w=E+1;w<t.length;w++){if(t[w]==="\\"&&w+1<t.length){w++;continue}if(t[w]==="]"){y=w;break}}if(y>E&&y+1<t.length&&t[y+1]==="("){T=y+1;for(let w=T+1;w<t.length;w++)if(t[w]===")"){k=w;break}}if(y>E&&T>y&&k>T){S();const w=t.substring(E+1,y),D=t.substring(T+1,k);n.push(new zD({children:[new xr({text:w,color:"0000FF",underline:{type:"single"},bold:i,italics:o,strike:l,size:e?.paragraphSize||24,font:g,rightToLeft:e?.direction==="RTL"})],link:D})),E=k;continue}}if(t[E]==="`"&&!c){S(),c=!0;continue}if(t[E]==="`"&&c){r&&(n.push(aQ(r,e)),r=""),c=!1;continue}if(c){r+=t[E];continue}if(E+2<t.length&&t[E]==="*"&&t[E+1]==="*"&&t[E+2]==="*"){S(),!i&&!o?(f=E,p=E):(f=-1,p=-1),i=!i,o=!o,E+=2;continue}if(E+1<t.length&&t[E]==="*"&&t[E+1]==="*"){S(),i?f=-1:f=E,i=!i,E++;continue}if(E+1<t.length&&t[E]==="+"&&t[E+1]==="+"){if(!(u||Lx(t,"++",E+2))){r+="++",E++;continue}S(),u?m=-1:m=E,u=!u,E++;continue}if(E+1<t.length&&t[E]==="~"&&t[E+1]==="~"){if(!(l||Lx(t,"~~",E+2))){r+="~~",E++;continue}S(),l?x=-1:x=E,l=!l,E++;continue}if(t[E]==="*"&&(E===0||t[E-1]!=="*")&&(E===t.length-1||t[E+1]!=="*")){S(),o?p=-1:p=E,o=!o;continue}r+=t[E]}return r&&(i&&o&&f>=0&&p>=0&&f===p?(r="***"+r,i=!1,o=!1):(i&&f>=0&&(r="**"+r,i=!1),o&&p>=0&&(r="*"+r,o=!1),u&&m>=0&&(r="++"+r,u=!1),l&&x>=0&&(r="~~"+r,l=!1)),c&&(r="`"+r),r.trim()&&n.push(...A(r))),n.length===0&&n.push(new xr({text:"",color:"000000",size:e?.paragraphSize||24,font:g})),n}function aQ(t,e){return new xr({text:t,font:"Courier New",size:e?.paragraphSize?e.paragraphSize-2:20,color:"444444",shading:{fill:"F5F5F5"},rightToLeft:e?.direction==="RTL"})}function oQ(t,e,n){const r=t.split(`
 `),i=[];e&&i.push(new xr({text:e,font:"Courier New",size:n.codeBlockSize||18,color:"666666",bold:!0,rightToLeft:n.direction==="RTL"}),new xr({text:`
 `,font:"Courier New",size:n.codeBlockSize||18,break:1,rightToLeft:n.direction==="RTL"})),r.forEach((u,l)=>{const c=u.match(/^\s*/)?.[0].length||0,p=" ".repeat(c)+u.slice(c);i.push(new xr({text:p,font:"Courier New",size:n.codeBlockSize||20,color:"444444",rightToLeft:n.direction==="RTL"})),l<r.length-1&&i.push(new xr({text:`
 `,font:"Courier New",size:n.codeBlockSize||20,break:1,rightToLeft:n.direction==="RTL"}))});const o=(()=>{switch(n.codeBlockAlignment){case"CENTER":return Ht.CENTER;case"RIGHT":return Ht.RIGHT;case"JUSTIFIED":return Ht.JUSTIFIED;case"LEFT":default:return Ht.LEFT}})();return new Rn({children:i,spacing:{before:n.paragraphSpacing,after:n.paragraphSpacing,line:360,lineRule:"exact"},shading:{fill:"F5F5F5"},border:{top:{style:Cu.SINGLE,size:1,color:"DDDDDD"},bottom:{style:Cu.SINGLE,size:1,color:"DDDDDD"},left:{style:Cu.SINGLE,size:1,color:"DDDDDD"},right:{style:Cu.SINGLE,size:1,color:"DDDDDD"}},indent:{left:360},alignment:o})}async function sQ(t,e,n){try{let m=function(D,_){return D[_]<<8|D[_+1]},x=function(D,_){return(D[_]<<24|D[_+1]<<16|D[_+2]<<8|D[_+3])>>>0},r,i,o=e;const u=e.indexOf("#");if(u>=0){const D=e.substring(u+1);o=e.substring(0,u);const _=D.match(/^(\d+)x(\d+)$/);if(_)r=parseInt(_[1],10),i=parseInt(_[2],10);else{const j=new URLSearchParams(D.replace(/&amp;/g,"&")),L=j.get("w")||j.get("width"),I=j.get("h")||j.get("height");L&&/^\d+$/.test(L)&&(r=parseInt(L,10)),I&&/^\d+$/.test(I)&&(i=parseInt(I,10))}}let l,c="";if(/^data:/i.test(o)){const D=o.match(/^data:([^;,]*)(;base64)?,(.*)$/i);if(!D)throw new Error(`Invalid data URL for image: ${o.substring(0,100)}...`);c=D[1]||"";const _=!!D[2],j=D[3];try{if(l=_?typeof Buffer<"u"?Buffer.from(j,"base64"):Uint8Array.from(atob(j),I=>I.charCodeAt(0)):typeof Buffer<"u"?Buffer.from(decodeURIComponent(j)):new TextEncoder().encode(decodeURIComponent(j)),!l||l.length===0)throw new Error("Data URL produced empty image data")}catch(L){throw new Error(`Failed to decode data URL: ${L instanceof Error?L.message:String(L)}`)}}else{const D=await fetch(o);if(!D.ok)throw new Error(`Failed to fetch image: ${D.status} ${D.statusText}`);const _=await D.arrayBuffer();l=typeof Buffer<"u"?Buffer.from(_):new Uint8Array(_),c=D.headers.get("content-type")||""}let f="png";const p=e;if(/jpeg|jpg/i.test(c)||/\.(jpe?g)(\?|#|$)/i.test(p)?f="jpg":/png/i.test(c)||/\.(png)(\?|#|$)/i.test(p)?f="png":/gif/i.test(c)||/\.(gif)(\?|#|$)/i.test(p)?f="gif":f="png",!l||l.length===0)throw new Error(`Invalid image data: data length is ${l?(l instanceof Uint8Array,l.length):0}`);let g,A;const S=l instanceof Uint8Array?l:new Uint8Array(l);if(f==="png"&&S.length>=24)S[0]===137&&S[1]===80&&S[2]===78&&S[3]===71&&(g=x(S,16),A=x(S,20));else if(f==="jpg"){let D=2;for(;D+9<S.length&&S[D]===255;){const _=S[D+1],j=m(S,D+2);if(_===192||_===194){A=m(S,D+5),g=m(S,D+7);break}D+=2+j}}else f==="gif"&&S.length>=10&&(g=S[6]|S[7]<<8,A=S[8]|S[9]<<8);let E,y;const T=g&&A?g/A:void 0;r&&i?(E=r,y=i):r&&T?(E=r,y=Math.max(1,Math.round(r/T))):i&&T?(y=i,E=Math.max(1,Math.round(i*T))):g?(E=Math.min(g,400),T&&(y=Math.max(1,Math.round(E/T)))):E=200;const k=typeof Buffer<"u"&&!(l instanceof Buffer)?Buffer.from(l):l instanceof Uint8Array?l:Buffer.from(l),w=y||(E?Math.round(E*.75):200);return[new Rn({children:[new fH({data:k,transformation:{width:E,height:w},type:f})],alignment:Ht.CENTER,spacing:{before:n.paragraphSpacing,after:n.paragraphSpacing}})]}catch(r){return console.error("Error in processImage:",r),console.error("Error stack:",r instanceof Error?r.stack:"No stack available"),[new Rn({children:[new xr({text:`[Image could not be displayed: ${t}]`,italics:!0,color:"FF0000",font:fc(n)})],alignment:Ht.CENTER})]}}function uQ(t,e){const n=Px(t,e),r=e.paragraphAlignment?e.paragraphAlignment==="CENTER"?Ht.CENTER:e.paragraphAlignment==="RIGHT"?Ht.RIGHT:e.paragraphAlignment==="JUSTIFIED"?Ht.JUSTIFIED:Ht.LEFT:Ht.LEFT,i=e.paragraphAlignment==="JUSTIFIED"?{left:0,right:0}:void 0;return new Rn({children:n,spacing:{before:e.paragraphSpacing,after:e.paragraphSpacing,line:e.lineSpacing*240},alignment:r,indent:i,bidirectional:e.direction==="RTL"})}async function lQ(t,e,n,r={}){const i=[],o=[],u=n.documentType||"document",l=r.sequenceIdOffset||0;let c=0;function f(g){if(g.code)return"`"+g.value+"`";let A=g.link?`[${g.value}](${g.link})`:g.value;return g.strikethrough&&(A=`~~${A}~~`),g.underline&&(A=`++${A}++`),g.bold&&g.italic?"***"+A+"***":g.bold?"**"+A+"**":g.italic?"*"+A+"*":A}function p(g,A=0){switch(g.type){case"heading":{const S=g.children.map(w=>f(w)).join(""),E="#".repeat(g.level)+" "+S,y={level:g.level,style:g.level===1?"Title":void 0},{paragraph:T,bookmarkId:k}=eQ(E,y,e);return o.push({text:S,level:g.level,bookmarkId:k}),[T]}case"paragraph":{const S=g.children.map(E=>f(E)).join("");return[uQ(S,e)]}case"list":return m(g,A||0);case"codeBlock":return[oQ(g.value,g.language,e)];case"blockquote":{const S=g.children.map(E=>E.type==="paragraph"?E.children.map(y=>y.value).join(""):"").join(`
