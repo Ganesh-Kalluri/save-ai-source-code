@@ -1,0 +1,18 @@
+{
+   "edgeExtensionName": {
+      "description": "The name of the extension for Edge in Spanish",
+      "message": "AI Exporter - Gemini a PDF y Sincronización Notion"
+   },
+   "extensionDescription": {
+      "description": "Spanish description: key models and formats first, SEO at the end.",
+      "message": "Exporta ChatGPT, Claude, Gemini y NotebookLM a PDF/Word/Markdown/Txt. Sync Notion, copia y selección. Soporta +10 plataformas de IA."
+   },
+   "extensionName": {
+      "description": "The name of the extension",
+      "message": "AI Exporter: Guarda ChatGPT, Gemini en PDF, Word, MD | Sincroniza Notion"
+   },
+   "firefoxExtensionName": {
+      "description": "The name of the extension for Firefox in Spanish",
+      "message": "AI Exporter - ChatGPT a PDF y Word"
+   }
+}

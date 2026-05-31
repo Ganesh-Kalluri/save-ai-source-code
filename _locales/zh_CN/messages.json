@@ -1,0 +1,18 @@
+{
+   "edgeExtensionName": {
+      "description": "扩展名称",
+      "message": "AI Exporter - 保存 Gemini 会话为 PDF 并同步 Notion"
+   },
+   "extensionDescription": {
+      "description": "扩展描述",
+      "message": "一站式 AI 会话管理工具，可将 ChatGPT、Gemini、Claude 和 NotebookLM 等 AI 网站的会话，导出为 PDF/Word/Markdown/Txt 等多种格式，支持一键下载复制，自定义选择导出内容，一键同步会话到 Notion 页面等功能"
+   },
+   "extensionName": {
+      "description": "扩展名称",
+      "message": "AI Exporter：保存 ChatGPT，Gemini 会话为 PDF/Word/MD 等格式，一键同步到 Notion 文档"
+   },
+   "firefoxExtensionName": {
+      "description": "扩展名称 (Firefox)",
+      "message": "AI Exporter - ChatGPT 导出 PDF"
+   }
+}

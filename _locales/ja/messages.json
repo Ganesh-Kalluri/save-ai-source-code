@@ -1,0 +1,18 @@
+{
+   "edgeExtensionName": {
+      "description": "The name of the extension for Edge",
+      "message": "AI Exporter - Gemini 会話をPDF保存＆Notion同期"
+   },
+   "extensionDescription": {
+      "description": "The description of the extension",
+      "message": "ChatGPT, Gemini, Claude, NotebookLMをPDF/Word/Markdown/Txtで保存。Notion同期、コピー、範囲選択に対応。10種類以上のAIプラットフォームをサポートする万能ツール。"
+   },
+   "extensionName": {
+      "description": "The name of the extension",
+      "message": "AI Exporter：ChatGPT・Geminiの会話をPDF/Word/MDに保存｜Notionに同期"
+   },
+   "firefoxExtensionName": {
+      "description": "The name of the extension for Firefox",
+      "message": "AI Exporter - ChatGPTをPDFに"
+   }
+}

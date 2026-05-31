@@ -1,0 +1,34 @@
+🚀 AI Exporter - Professional AI Chat Export Tool
+
+📌 Introduction
+Want to save your AI conversations forever? AI Exporter is a professional browser extension supporting 10+ major platforms including ChatGPT, Gemini, Claude, and NotebookLM. With just one click, export your AI chats perfectly to PDF (Latex supported), Word, Markdown (MD), JSON, Image, or sync directly to Notion.
+
+Never worry about losing your chat history again. Archive, share, and edit your AI knowledge assets with ease.
+
+📌 Key Features
+
+🔥 Popular Features
+🆕 Precise Timestamps: Automatically extracts and displays the exact creation time of each session, making your history fully traceable for better timeline management.
+🆕 Super-Long Chat Export: Engineered to handle massive conversations effortlessly without crashing or truncating, ensuring every detail of your deep dives is captured.
+🆕 Accurate Model Versioning: Displays the specific AI model version used in each session (e.g., Gemini 3 Pro, ChatGPT 2.5 thinking) in exported docs, making academic research and sourcing more rigorous.
+🆕 Cross-Platform Collection: Sidebar mode lets you save chats locally with one click for multi-model comparison and merged exports.
+🆕 Deep Research Export: Full support for downloading content from ChatGPT Deep Research and Gemini Deep Research modes.
+🆕 Stylish Templates: Choose from Highlight, Dark, Note, and other beautiful templates for a professional look.
+🆕 Extensive Compatibility: Supports 10+ sites, including DeepSeek, Perplexity, Copilot, Google AI Studio, and more.
+
+✨ Powerful Export Experience
+✅ Perfect PDF Layout: Automatically handles Latex formulas and code highlighting while maintaining the native UI feel.
+✅ Sync to Notion: Seamlessly bridge AI and your knowledge base by turning chats into Notion pages instantly.
+✅ Flexible Selection: Skip the fluff—select only what you need with multi-selection support.
+✅ Image & Text Preservation: Perfectly retains images and charts; supports generating long-image sharing cards.
+✅ Local Knowledge Base: Save important AI inspirations to a local database for instant offline preview.
+✅ Search Overviews Backup: One-click backup for Google Search AI Overviews results.
+
+📌 Why Choose AI Exporter?
+👨💻 Community Focused: We listen to user feedback with frequent updates for a reliable experience.
+🎓 Academic Friendly: Precisely identify and export academic discussions with complex Latex formulas.
+👨💻 Dev Empowered: Export Markdown with one click; code snippets can be seamlessly integrated into your docs.
+📊 Knowledge Accumulation: Quickly backup data analysis and reports to build your personal AI think tank.
+📢 Preserve Inspiration: Save full image-text chats as beautifully formatted PDFs for easy sharing.
+
+🌟 Install for free now and give your AI assets a permanent home!

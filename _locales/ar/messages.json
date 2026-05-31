@@ -1,0 +1,18 @@
+{
+   "edgeExtensionName": {
+      "description": "The name of the extension for Edge",
+      "message": "AI Exporter - Gemini إلى PDF ومزامنة Notion"
+   },
+   "extensionDescription": {
+      "description": "Arabic description: Core features first, SEO (10+ platforms) at the end.",
+      "message": "تصدير محادثات ChatGPT, NotebookLM, Gemini إلى PDF/Word/MD/Txt. مزامنة Notion ونسخ المحتوى. يدعم أكثر من 10 منصات ذكاء اصطناعي."
+   },
+   "extensionName": {
+      "description": "The name of the extension",
+      "message": "AI Exporter: حفظ ChatGPT و Gemini كـ PDF/Word/MD | مزامنة Notion"
+   },
+   "firefoxExtensionName": {
+      "description": "The name of the extension for Firefox",
+      "message": "AI Exporter - ChatGPT إلى PDF"
+   }
+}

@@ -1,0 +1,18 @@
+{
+   "edgeExtensionName": {
+      "description": "The name of the extension for Edge",
+      "message": "AI Exporter - Gemini 대화를 PDF로 저장 및 Notion 동기화"
+   },
+   "extensionDescription": {
+      "description": "The description of the extension",
+      "message": "ChatGPT, DeepSeek, Gemini 대화를 PDF/이미지/Markdown/Txt로 저장 및 내보내기. Notion 연동, 대화 복사 등 10종 이상의 AI 플랫폼을 지원하는 올인원 도구."
+   },
+   "extensionName": {
+      "description": "The name of the extension",
+      "message": "AI Exporter: ChatGPT·Gemini 대화 저장 (PDF/Word/MD) | Notion 연동 | NotebookLM 지원"
+   },
+   "firefoxExtensionName": {
+      "description": "The name of the extension for Firefox",
+      "message": "AI Exporter - ChatGPT를 PDF로"
+   }
+}

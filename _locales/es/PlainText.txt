@@ -1,0 +1,34 @@
+🚀 AI Exporter - Herramienta Profesional de Exportación de Chats de IA
+
+📌 Introducción
+¿Quieres guardar tus conversaciones de IA para siempre? AI Exporter es una extensión de navegador profesional compatible con más de 10 plataformas principales, incluidas ChatGPT, Gemini, Claude y NotebookLM. Con un solo clic, exporta tus chats de IA perfectamente a PDF (compatible con Latex), Word, Markdown (MD), JSON, Imagen, o sincronízalos directamente con Notion.
+
+No te preocupes nunca más por perder tu historial de chats. Archiva, comparte y edita tus activos de conocimiento de IA con facilidad.
+
+📌 Características Principales
+
+🔥 Funciones Populares
+🆕 Marcas de Tiempo Precisas: Extrae y muestra automáticamente la hora exacta de creación de cada sesión, haciendo que tu historial sea completamente rastreable para una mejor gestión de la línea de tiempo.
+🆕 Exportación de Chats Súper Largos: Diseñado para manejar conversaciones masivas sin esfuerzo, sin bloqueos ni truncamientos, asegurando que se capture cada detalle de tus investigaciones profundas.
+🆕 Versiones de Modelos Precisas: Muestra la versión específica del modelo de IA utilizada en cada sesión (por ejemplo, Gemini 3 Pro, ChatGPT 2.5 thinking) en los documentos exportados, haciendo que la investigación académica y la verificación de fuentes sean más rigurosas.
+🆕 Colección Multiplataforma: El modo de barra lateral te permite guardar chats localmente con un solo clic para comparar múltiples modelos y exportar de forma combinada.
+🆕 Exportación de Investigación Profunda: Soporte completo para descargar contenido de los modos ChatGPT Deep Research y Gemini Deep Research.
+🆕 Plantillas Elegantes: Elige entre plantillas como Resaltado, Oscuro, Nota y otras opciones hermosas para un aspecto profesional.
+🆕 Amplia Compatibilidad: Soporta más de 10 sitios, incluidos DeepSeek, Perplexity, Copilot, Google AI Studio y más.
+
+✨ Poderosa Experiencia de Exportación
+✅ Diseño PDF Perfecto: Maneja automáticamente las fórmulas de Latex y el resaltado de código mientras mantiene la sensación de la interfaz de usuario nativa.
+✅ Sincronización con Notion: Conecta sin problemas la IA y tu base de conocimientos convirtiendo los chats en páginas de Notion al instante.
+✅ Selección Flexible: Omite el relleno: selecciona solo lo que necesitas con el soporte de selección múltiple.
+✅ Preservación de Imagen y Texto: Conserva perfectamente imágenes y gráficos; admite la generación de tarjetas de intercambio de imágenes largas.
+✅ Base de Conocimientos Local: Guarda importantes inspiraciones de IA en una base de datos local para una vista previa sin conexión al instante.
+✅ Copia de Seguridad de Resúmenes de Búsqueda: Copia de seguridad con un solo clic para los resultados de Google Search AI Overviews.
+
+📌 ¿Por qué elegir AI Exporter?
+👨💻 Enfocado en la Comunidad: Escuchamos los comentarios de los usuarios y realizamos actualizaciones frecuentes para ofrecer una experiencia confiable.
+🎓 Amigable con lo Académico: Identifica y exporta con precisión discusiones académicas con fórmulas complejas de Latex.
+👨💻 Empoderamiento para Desarrolladores: Exporta Markdown con un solo clic; los fragmentos de código se pueden integrar perfectamente en tus documentos.
+📊 Acumulación de Conocimiento: Haz rápidamente copias de seguridad de análisis de datos e informes para construir tu grupo de expertos de IA personal.
+📢 Preservar la Inspiración: Guarda chats completos de imágenes y texto como archivos PDF con un formato hermoso para compartirlos fácilmente.
+
+🌟 ¡Instálalo gratis ahora y dale a tus activos de IA un hogar permanente!

@@ -1,0 +1,62 @@
+{
+   "action": {
+      "default_popup": "popup.html",
+      "default_title": "SaveAI Popup"
+   },
+   "background": {
+      "service_worker": "background.js"
+   },
+   "content_scripts": [ {
+      "js": [ "content-scripts/content.js" ],
+      "matches": [ "https://aistudio.google.com/*", "https://chat.deepseek.com/*", "https://chatgpt.com/*", "https://claude.ai/*", "https://copilot.microsoft.com/*", "https://gemini.google.com/*", "https://github.com/*", "https://grok.com/*", "https://kimi.moonshot.cn/*", "https://notebooklm.google.com/*", "https://poe.com/*", "https://tongyi.aliyun.com/*", "https://www.google.co.uk/*", "https://www.google.com.hk/*", "https://www.google.com/*", "https://www.kimi.com/*", "https://www.perplexity.ai/*", "https://www.qianwen.com/*", "https://yuanbao.tencent.com/*" ],
+      "run_at": "document_idle"
+   }, {
+      "include_globs": [  ],
+      "js": [ "content-scripts/saveai.js" ],
+      "matches": [ "https://saveai.net/*" ],
+      "run_at": "document_start"
+   }, {
+      "js": [ "content-scripts/start.js" ],
+      "matches": [ "https://aistudio.google.com/*", "https://chat.deepseek.com/*", "https://chatgpt.com/*", "https://claude.ai/*", "https://copilot.microsoft.com/*", "https://gemini.google.com/*", "https://github.com/*", "https://grok.com/*", "https://kimi.moonshot.cn/*", "https://notebooklm.google.com/*", "https://poe.com/*", "https://tongyi.aliyun.com/*", "https://www.google.co.uk/*", "https://www.google.com.hk/*", "https://www.google.com/*", "https://www.kimi.com/*", "https://www.perplexity.ai/*", "https://www.qianwen.com/*", "https://yuanbao.tencent.com/*" ],
+      "run_at": "document_start"
+   } ],
+   "declarative_net_request": {
+      "rule_resources": [ {
+         "enabled": true,
+         "id": "ruleset_1",
+         "path": "rules/request_modifier_rule.json"
+      } ]
+   },
+   "default_locale": "en",
+   "description": "__MSG_extensionDescription__",
+   "host_permissions": [ "*://*/*" ],
+   "icons": {
+      "128": "icon-128.png",
+      "16": "icon-16.png",
+      "32": "icon-32.png",
+      "48": "icon-48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuLJLOWOqob5zk0xNvdYO++Nqm2KJEsbQIz5y7F0pJUzv2QdAjmwPtV5aayVCZe6d2QDjHk0pikeg1yymn26QxG9DJk3GprbBMtwQ0jJtisjo16Xxj3j4ZiY7bCunYOG0BmhKrQ2hXi3DtSqd91DeraWbs7Je6qthsIFB0kFSlb7XlGk+K4/fQ9HK98ml9468JdDDPH1JfXZyacOUFrzlJG3JrvD5LIHxfQZmV4NugMRnKHLYhd2hoq6ACiq8yLHqM1Ho4qa4mOEbUMfs0UhgdlY5OMm4JahtMDuOqgsRsUF8pygBSRfMStRWGqd1pz57TFwZ2v8Shb/Sk1XcgkxS/QIDAQAB",
+   "manifest_version": 3,
+   "name": "__MSG_extensionName__",
+   "options_ui": {
+      "open_in_tab": true,
+      "page": "options.html"
+   },
+   "permissions": [ "tabs", "storage", "cookies", "contextMenus", "declarativeNetRequest", "sidePanel" ],
+   "side_panel": {
+      "default_path": "sidepanel.html"
+   },
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "4.2.1",
+   "web_accessible_resources": [ {
+      "matches": [ "*://*/*" ],
+      "resources": [ "inject-web.js" ]
+   }, {
+      "matches": [ "\u003Call_urls>" ],
+      "resources": [ "preview.html", "assets/*" ]
+   }, {
+      "matches": [ "https://aistudio.google.com/*", "https://chat.deepseek.com/*", "https://chatgpt.com/*", "https://claude.ai/*", "https://copilot.microsoft.com/*", "https://gemini.google.com/*", "https://github.com/*", "https://grok.com/*", "https://kimi.moonshot.cn/*", "https://notebooklm.google.com/*", "https://poe.com/*", "https://tongyi.aliyun.com/*", "https://www.google.co.uk/*", "https://www.google.com.hk/*", "https://www.google.com/*", "https://www.kimi.com/*", "https://www.perplexity.ai/*", "https://www.qianwen.com/*", "https://yuanbao.tencent.com/*" ],
+      "resources": [ "content-scripts/content.css" ]
+   } ]
+}

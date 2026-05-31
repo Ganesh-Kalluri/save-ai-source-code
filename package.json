@@ -1,0 +1,27 @@
+{
+  "name": "save-ai-reconstructed",
+  "version": "4.2.1",
+  "description": "Reconstructed high-fidelity source code for the SaveAI Chrome Extension.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext .js,.jsx"
+  },
+  "dependencies": {
+    "dexie": "^4.0.10",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "styled-components": "^6.1.15"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.306",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.20.0",
+    "vite": "^6.1.0"
+  }
+}

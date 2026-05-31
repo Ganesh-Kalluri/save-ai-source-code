@@ -1,0 +1,80 @@
+[
+    {
+        "id": 100,
+        "priority": 2,
+        "action": {
+            "type": "modifyHeaders",
+            "requestHeaders": [
+                {
+                    "header": "origin",
+                    "operation": "set",
+                    "value": "chrome-extension://knheggckgoiihginacbkhaalnibhilkk"
+                }
+            ]
+        },
+        "condition": {
+            "urlFilter": "https://www.notion.so/api/v3/*WebClipper*",
+            "resourceTypes": [
+                "xmlhttprequest"
+            ],
+            "domainType": "thirdParty",
+            "initiatorDomains": [
+                "bcofhijkopbcppedpgdkgjclkankhjfd",
+                "ckdlofhkhbcokenblpffbjbpojicickl",
+                "kagjkiiecagemklhmhkabbalfpbianbe"
+            ]
+        }
+    },
+    {
+        "id": 101,
+        "priority": 1,
+        "action": {
+            "type": "modifyHeaders",
+            "requestHeaders": [
+                {
+                    "header": "origin",
+                    "operation": "set",
+                    "value": "https://www.notion.so"
+                }
+            ]
+        },
+        "condition": {
+            "urlFilter": "https://www.notion.so/*",
+            "resourceTypes": [
+                "xmlhttprequest"
+            ],
+            "domainType": "thirdParty",
+            "initiatorDomains": [
+                "bcofhijkopbcppedpgdkgjclkankhjfd",
+                "ckdlofhkhbcokenblpffbjbpojicickl",
+                "kagjkiiecagemklhmhkabbalfpbianbe"
+            ]
+        }
+    },
+    {
+        "id": 102,
+        "priority": 1,
+        "action": {
+            "type": "modifyHeaders",
+            "requestHeaders": [
+                {
+                    "header": "Referer",
+                    "operation": "set",
+                    "value": "https://gemini.google.com/"
+                }
+            ]
+        },
+        "condition": {
+            "urlFilter": "https://lh3.googleusercontent.com/*",
+            "resourceTypes": [
+                "image"
+            ],
+            "domainType": "thirdParty",
+            "initiatorDomains": [
+                "bcofhijkopbcppedpgdkgjclkankhjfd",
+                "ckdlofhkhbcokenblpffbjbpojicickl",
+                "kagjkiiecagemklhmhkabbalfpbianbe"
+            ]
+        }
+    }
+]

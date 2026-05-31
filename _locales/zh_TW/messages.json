@@ -1,0 +1,18 @@
+{
+   "edgeExtensionName": {
+      "description": "The name of the extension for Edge",
+      "message": "AI Exporter - 將 Gemini 對話儲存為 PDF 並同步 Notion"
+   },
+   "extensionDescription": {
+      "description": "The description of the extension",
+      "message": "將 ChatGPT, Claude, Gemini 對話匯出為 PDF/Word/Markdown/Txt。支援 Notion 同步、內容複製與範圍選取，兼容 10+ 種 AI 平台的全方位工具。"
+   },
+   "extensionName": {
+      "description": "The name of the extension",
+      "message": "AI Exporter：將 ChatGPT、Gemini 對話儲存為 PDF/Word/MD | 同步 Notion"
+   },
+   "firefoxExtensionName": {
+      "description": "The name of the extension for Firefox",
+      "message": "AI Exporter - ChatGPT 匯出 PDF 與 Word"
+   }
+}
