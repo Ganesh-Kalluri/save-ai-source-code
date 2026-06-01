@@ -273,31 +273,39 @@ function Px(t, e) {
   // Fast path: no $ signs means no math
   if (!t || t.indexOf('$') === -1) return _saveai_orig_Px(t, e);
 
-  // Split on $$...$$ (display) and $...$ (inline) math delimiters
   const segments = [];
-  let cur = '';
-  let i = 0;
-  while (i < t.length) {
-    if (t[i] === '$' && t[i+1] === '$') {
-      if (cur) { segments.push({ type: 'text', content: cur }); cur = ''; }
-      i += 2;
-      let mathContent = '';
-      while (i < t.length && !(t[i] === '$' && t[i+1] === '$')) mathContent += t[i++];
-      i += 2;
-      if (mathContent.trim()) segments.push({ type: 'display', content: mathContent });
-    } else if (t[i] === '$') {
-      if (cur) { segments.push({ type: 'text', content: cur }); cur = ''; }
-      i += 1;
-      let mathContent = '';
-      while (i < t.length && t[i] !== '$') mathContent += t[i++];
-      i += 1;
-      if (mathContent.trim()) segments.push({ type: 'inline', content: mathContent });
-      else cur += '$' + mathContent + '$';
-    } else {
-      cur += t[i++];
+  // Regex to match either display math $$...$$ or inline math $...$
+  // Display math: \$\$([\s\S]+?)\$\$
+  // Inline math: (?<![a-zA-Z0-9\\])\$([^\s\$](?:[\s\S]*?[^\s\$])?)\$(?!\d)
+  const mathRegex = /\$\$([\s\S]+?)\$\$|(?<![a-zA-Z0-9\\])\$([^\s\$](?:[\s\S]*?[^\s\$])?)\$(?!\d)/g;
+
+  let lastIndex = 0;
+  let match;
+
+  while ((match = mathRegex.exec(t)) !== null) {
+    const matchIndex = match.index;
+    if (matchIndex > lastIndex) {
+      segments.push({ type: 'text', content: t.slice(lastIndex, matchIndex) });
     }
+
+    if (match[1] !== undefined) {
+      // Display math
+      segments.push({ type: 'display', content: match[1] });
+    } else if (match[2] !== undefined) {
+      // Inline math
+      segments.push({ type: 'inline', content: match[2] });
+    }
+
+    lastIndex = mathRegex.lastIndex;
   }
-  if (cur) segments.push({ type: 'text', content: cur });
+
+  if (lastIndex < t.length) {
+    segments.push({ type: 'text', content: t.slice(lastIndex) });
+  }
+
+  if (segments.every(seg => seg.type === 'text')) {
+    return _saveai_orig_Px(t, e);
+  }
 
   // Build result array
   const result = [];

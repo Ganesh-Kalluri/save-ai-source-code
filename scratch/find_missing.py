@@ -1,0 +1,8 @@
+import os
+
+root_dir = r"c:\Users\Kalluri Ganesh\Downloads\save-ai-source-code-main (1)\save-ai-source-code-main"
+
+for dirpath, _, filenames in os.walk(root_dir):
+    for filename in filenames:
+        if "logger" in filename.lower() or "analytics" in filename.lower():
+            print(f"Found file: {os.path.relpath(os.path.join(dirpath, filename), root_dir)}")

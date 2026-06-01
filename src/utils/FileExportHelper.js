@@ -91,6 +91,134 @@ export class FileExportHelper {
     });
   }
 
+  static getMessageSummary(message, limit, enableThinkingContent) {
+    if (!message.contents) return "";
+    const text = message.contents
+      .filter(c => {
+        if (c.type === "thinking" && !enableThinkingContent) return false;
+        return (c.type === "markdown" || c.type === "text" || c.type === "thinking") && c.content;
+      })
+      .map(c => c.content.replace(/\n+/g, " ").trim())
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+    return text.slice(0, limit);
+  }
+
+  static formatMarkdownLineBreaks(text) {
+    if (!text) return "";
+    text = text.replace(/([^\n])\s*\$\$(.*?)\$\$/g, (match, p1, p2) => p1 + "\n$$" + p2 + "$$");
+    text = text.replace(/\$\$(.*?)\$\$\s*([^\n])/g, (match, p1, p2) => "$$" + p1 + "$$\n" + p2);
+    const lines = text.split("\n");
+    const result = [];
+    let inCodeBlock = false;
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmed = line.trim();
+      
+      if (trimmed.startsWith("```")) {
+        inCodeBlock = !inCodeBlock;
+        result.push(line);
+        continue;
+      }
+      
+      if (inCodeBlock) {
+        result.push(line);
+        continue;
+      }
+      
+      if (trimmed.startsWith("|") || trimmed.includes("|")) {
+        result.push(line);
+        continue;
+      }
+      
+      if (trimmed === "") {
+        result.push("");
+      } else {
+        if (result.length > 0 && result[result.length - 1] !== "") {
+          result.push("");
+        }
+        let finalLine = trimmed;
+        if (/^[a-zA-Z0-9]+\.$/.test(trimmed)) {
+          finalLine = trimmed.replace(/\.$/, "\\.");
+        } else if (/^[IVXLCDM]+\.(\s|$)/i.test(trimmed)) {
+          finalLine = trimmed.replace(/^([IVXLCDM]+)\./i, "$1\\.");
+        }
+        result.push(finalLine + "  ");
+      }
+    }
+    
+    return result.join("\n");
+  }
+
+  static serializeMessagesToMarkdown(messages, enableThinkingContent, effectiveFromUrl, showTimestamp) {
+    if (messages.length === 0) return "";
+    const lines = [];
+    if (effectiveFromUrl) {
+      lines.push(`> From: ${effectiveFromUrl}`);
+    }
+    messages.forEach((m, idx) => {
+      const roleHeader = m.role === "user" ? "# you asked" : `# ${m.displayModel || m.model || "AI"} response`;
+      lines.push(roleHeader);
+      
+      if (showTimestamp && m.role === "user") {
+        const ts = m.createdAt || m.created_at || m.timestamp;
+        if (ts) {
+          let dateStr = "";
+          try {
+            const d = new Date(ts);
+            if (!isNaN(d.getTime())) {
+              const year = d.getFullYear();
+              const month = String(d.getMonth() + 1).padStart(2, "0");
+              const day = String(d.getDate()).padStart(2, "0");
+              const hours = String(d.getHours()).padStart(2, "0");
+              const minutes = String(d.getMinutes()).padStart(2, "0");
+              const seconds = String(d.getSeconds()).padStart(2, "0");
+              dateStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            } else {
+              dateStr = String(ts);
+            }
+          } catch {
+            dateStr = String(ts);
+          }
+          if (dateStr) {
+            lines.push(`message time: ${dateStr}`);
+          }
+        }
+      }
+      
+      const parts = m.contents
+        .filter(c => {
+          if (c.type === "thinking" && !enableThinkingContent) return false;
+          return c.type === "markdown" || c.type === "text" || c.type === "thinking" || c.type === "image" || (c.type === "attachment" && c.attachment?.mime_type?.startsWith("image/"));
+        })
+        .map(c => {
+          if (c.type === "thinking") {
+            return `Thinking\n\n${this.formatMarkdownLineBreaks(c.content.trim())}`;
+          } else if (c.type === "image" && c.imageUrl) {
+            return `![image](${c.imageUrl})`;
+          } else if (c.type === "attachment" && c.attachment?.url) {
+            return `![${c.attachment.name || "image"}](${c.attachment.url})`;
+          }
+          return this.formatMarkdownLineBreaks(c.content?.trim() || "");
+        })
+        .filter(p => p.length > 0);
+        
+      if (parts.length > 0) {
+        lines.push(...parts);
+      } else {
+        lines.push("*(No content)*");
+      }
+      
+      if (idx < messages.length - 1) {
+        lines.push("---");
+      }
+    });
+    
+    return lines.join("\n\n");
+  }
+
   static async exportMessagesToWord({ messages, title, fromUrl, showLoading = true }) {
     return this.withLoading(showLoading, async () => {
       if (messages.length === 0) throw new Error("No messages to export");
@@ -106,8 +234,7 @@ export class FileExportHelper {
       if (messages.length === 0) throw new Error("No messages to export");
       const { enableThinkingContent, effectiveFromUrl, showTimestamp } = await this.getTextExportOptions(fromUrl);
       
-      // Dummy markdown serializer matching internal os() function
-      const markdown = messages.map(m => `### ${m.role === "user" ? "You Asked" : "AI Assistant"}\n\n${m.contents?.map(c => c.content || "").join(" ")}`).join("\n\n");
+      const markdown = this.serializeMessagesToMarkdown(messages, enableThinkingContent, effectiveFromUrl, showTimestamp);
       const filename = this.getFilename(title, "md");
       this.saveBlobToFile(markdown, filename, "text/markdown;charset=utf-8");
       return "success";
@@ -119,7 +246,7 @@ export class FileExportHelper {
       if (messages.length === 0) throw new Error("No messages to export");
       const { enableThinkingContent, effectiveFromUrl, showTimestamp } = await this.getTextExportOptions(fromUrl);
       
-      const text = messages.map(m => `${m.role === "user" ? "User" : "Assistant"}: ${m.contents?.map(c => c.content || "").join(" ")}`).join("\n\n");
+      const text = messages.map(m => `${m.role === "user" ? "User" : "Assistant"}:\n${m.contents?.map(c => c.content || "").join("\n\n")}`).join("\n\n");
       const filename = this.getFilename(title, "txt");
       this.saveBlobToFile(text, filename, "text/plain;charset=utf-8");
       return "success";
@@ -141,7 +268,7 @@ export class FileExportHelper {
       if (messages.length === 0) throw new Error("No messages to copy");
       const { enableThinkingContent, effectiveFromUrl, showTimestamp } = await this.getTextExportOptions(fromUrl);
       
-      const markdown = messages.map(m => `### ${m.role === "user" ? "You Asked" : "AI Assistant"}\n\n${m.contents?.map(c => c.content || "").join(" ")}`).join("\n\n");
+      const markdown = this.serializeMessagesToMarkdown(messages, enableThinkingContent, effectiveFromUrl, showTimestamp);
       await navigator.clipboard.writeText(markdown);
       return "success";
     });

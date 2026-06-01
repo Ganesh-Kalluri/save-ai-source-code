@@ -686,31 +686,39 @@ function Px(t, e) {
   // Fast path: no $ signs means no math
   if (!t || t.indexOf('$') === -1) return _saveai_orig_Px(t, e);
 
-  // Split on $$...$$ (display) and $...$ (inline) math delimiters
   const segments = [];
-  let cur = '';
-  let i = 0;
-  while (i < t.length) {
-    if (t[i] === '$' && t[i+1] === '$') {
-      if (cur) { segments.push({ type: 'text', content: cur }); cur = ''; }
-      i += 2;
-      let mathContent = '';
-      while (i < t.length && !(t[i] === '$' && t[i+1] === '$')) mathContent += t[i++];
-      i += 2;
-      if (mathContent.trim()) segments.push({ type: 'display', content: mathContent });
-    } else if (t[i] === '$') {
-      if (cur) { segments.push({ type: 'text', content: cur }); cur = ''; }
-      i += 1;
-      let mathContent = '';
-      while (i < t.length && t[i] !== '$') mathContent += t[i++];
-      i += 1;
-      if (mathContent.trim()) segments.push({ type: 'inline', content: mathContent });
-      else cur += '$' + mathContent + '$';
-    } else {
-      cur += t[i++];
+  // Regex to match either display math $$...$$ or inline math $...$
+  // Display math: \$\$([\s\S]+?)\$\$
+  // Inline math: (?<![a-zA-Z0-9\\])\$([^\s\$](?:[\s\S]*?[^\s\$])?)\$(?!\d)
+  const mathRegex = /\$\$([\s\S]+?)\$\$|(?<![a-zA-Z0-9\\])\$([^\s\$](?:[\s\S]*?[^\s\$])?)\$(?!\d)/g;
+
+  let lastIndex = 0;
+  let match;
+
+  while ((match = mathRegex.exec(t)) !== null) {
+    const matchIndex = match.index;
+    if (matchIndex > lastIndex) {
+      segments.push({ type: 'text', content: t.slice(lastIndex, matchIndex) });
     }
+
+    if (match[1] !== undefined) {
+      // Display math
+      segments.push({ type: 'display', content: match[1] });
+    } else if (match[2] !== undefined) {
+      // Inline math
+      segments.push({ type: 'inline', content: match[2] });
+    }
+
+    lastIndex = mathRegex.lastIndex;
   }
-  if (cur) segments.push({ type: 'text', content: cur });
+
+  if (lastIndex < t.length) {
+    segments.push({ type: 'text', content: t.slice(lastIndex) });
+  }
+
+  if (segments.every(seg => seg.type === 'text')) {
+    return _saveai_orig_Px(t, e);
+  }
 
   // Build result array
   const result = [];
@@ -848,9 +856,7 @@ function print() { __p += __j.call(arguments, '') }
 
 ${m.content.trim()}`:m.type==="image"&&m.imageUrl?`![image](${m.imageUrl})`:m.type==="attachment"&&m.attachment?.url?`![${m.attachment.name||"image"}](${m.attachment.url})`:m.content?.trim()||"").filter(m=>m.length>0);p.length>0?i.push(...p):i.push("*(No content)*"),u<t.length-1&&i.push("---")}),i.join(`
 
-`)},up=(t,e=!1,n,r=!1)=>{if(t.length===0)return"";const i=[];return n&&i.push(`> From: ${n}`),t.forEach((o,u)=>{const l=o.role==="user"?"# you asked":`# ${o.model} response`;i.push(l),F9(o,r,i);const c=o.contents.filter(f=>f.type==="thinking"&&!e?!1:(f.type==="markdown"||f.type==="text"||f.type==="thinking")&&f.content).map(f=>{const p=f.content.trim();return f.type==="thinking"?`Thinking
-
-${p}`:p}).filter(f=>f.length>0);c.length>0?i.push(...c):i.push("*(No content)*"),u<t.length-1&&i.push("---")}),i.join(`
+`)},up=(t,e=!1,n,r=!1)=>{if(t.length===0)return"";const i=[];return n&&i.push(`> From: ${n}`),t.forEach((o,u)=>{const l=o.role==="user"?"# you asked":`# ${o.model} response`;i.push(l),F9(o,r,i);const formatMarkdownLineBreaks=text=>{if(!text)return"";text=text.replace(/([^\n])\s*\$\$(.*?)\$\$/g,((e,n,o)=>n+"\n$$"+o+"$$")),text=text.replace(/\$\$(.*?)\$\$\s*([^\n])/g,((e,n,o)=>"$$"+n+"$$\n"+o));const lines=text.split("\n"),result=[];let inCodeBlock=!1;for(let i=0;i<lines.length;i++){const line=lines[i],trimmed=line.trim();if(trimmed.startsWith("```")){inCodeBlock=!inCodeBlock,result.push(line);continue}if(inCodeBlock){result.push(line);continue}if(trimmed.startsWith("|")||trimmed.includes("|")){result.push(line);continue}if(trimmed==="")result.push("");else{if(result.length>0&&result[result.length-1]!=="")result.push("");let finalLine=trimmed;if(/^[a-zA-Z0-9]+\.$/.test(trimmed)){finalLine=trimmed.replace(/\.$/,"\\.")}else if(/^[IVXLCDM]+\.(\s|$)/i.test(trimmed)){finalLine=trimmed.replace(/^([IVXLCDM]+)\./i,"$1\\.")}result.push(finalLine+"  ")}}return result.join("\n")};const c=o.contents.filter(f=>f.type==="thinking"&&!e?!1:(f.type==="markdown"||f.type==="text"||f.type==="thinking")&&f.content).map(f=>{const p=f.content.trim();return f.type==="thinking"?`Thinking\n\n${formatMarkdownLineBreaks(p)}`:formatMarkdownLineBreaks(p)}).filter(f=>f.length>0);c.length>0?i.push(...c):i.push("*(No content)*"),u<t.length-1&&i.push("---")}),i.join(`
 
 `)},qQ=(t,e=!1,n,r=!1)=>{const i=up(t,e,n,r);return OQ.markdownToTxt(i)},O9=t=>JSON.stringify(t,null,2);class vd{static MIME_TYPE="application/vnd.openxmlformats-officedocument.wordprocessingml.document";static normalizeImageUrls=async e=>{for(const n of e)if(n.contents){for(const r of n.contents)if(r.type==="image"&&r.imageUrl){const i=await L1.getOwnImageUrl(r,{forceBase64:!0,maxSizeMB:1});i&&(r.imageUrl=i)}else if(r.type==="attachment"&&r.attachment?.mime_type?.startsWith("image/")&&r.attachment.url){const i=await L1.getOwnImageUrl({type:"image",imageUrl:r.attachment.url},{forceBase64:!0,maxSizeMB:1});i&&(r.attachment.url=i)}}};static getMarkdown=async(e,n)=>{const r=await ca.get("enableThinkingContent")??!1,i=await Kl.get("includeSourceUrl"),o=await ca.showTimestamp(),u=i?n:void 0;return await vd.normalizeImageUrls(e),UQ(e,r,u,o)};static exportMessagesToWordBlob=async(e,n)=>{if(!e||e.length===0)throw new Error("No messages to export");const r=await vd.getMarkdown(e,n);return zQ(r,{style:{codeBlockSize:18,lineSpacing:1,blockquoteAlignment:"LEFT"}})};static downloadMessagesToWord=async({messages:e,filename:n,fromUrl:r})=>{const i=await vd.exportMessagesToWordBlob(e,r);try{await ut.increaseCurrentUserExportUsage(ut.EXPORT_TYPES.word)}catch{}Hx(i,n,vd.MIME_TYPE)}}function HQ(t){if(typeof t!="string")return null;if(t=t.trim(),t.startsWith("#"))return t;const e=t.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)$/);if(e){const n=parseInt(e[1]).toString(16).padStart(2,"0"),r=parseInt(e[2]).toString(16).padStart(2,"0"),i=parseInt(e[3]).toString(16).padStart(2,"0");return`#${n}${r}${i}`}return t}function Wx(t){try{const e=t.childNodes;for(let n=0;n<e.length;n++)if(e[n].nodeType!==Node.TEXT_NODE)return!1;return!0}catch{return!0}}class Or{static inject_checkbox(e,n){const r=n?.class_name||"capture-my-checkbox";if(!e.querySelector(`input.${r}`)){const i=document.createElement("input");i.type="checkbox",i.classList.add(r),Object.assign(i.style,{position:"absolute",right:"-30px",top:"10px",zIndex:"1000",...n?.style}),e.appendChild(i)}}static removeElement(e){e&&e.parentNode&&e.parentNode.removeChild(e)}static remove_checkbox(e,n="capture-my-checkbox"){const r=e.querySelector(`input.${n}`);r&&this.removeElement(r)}static removeCheckboxAll(e=document.body,n="capture-my-checkbox"){e.querySelectorAll(`input.${n}`).forEach(i=>{this.removeElement(i)})}static get_checkboxes(e,n=!1,r="capture-my-checkbox"){return e.querySelectorAll(`input.${r}${n?":checked":""}`)}static inject_global_style(){if(document.getElementById("checkbox-manager-style"))return;const e=document.createElement("style");e.id="checkbox-manager-style",e.textContent=`
         .capture-my-checkbox {
